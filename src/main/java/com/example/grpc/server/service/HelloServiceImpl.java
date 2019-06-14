@@ -17,7 +17,10 @@ public class HelloServiceImpl extends HelloServiceImplBase {
                 .append(helloRequest.getLastName())
                 .toString();
 
-        HelloResponse response = HelloResponse.newBuilder().setGreeting(greeting).build();
+        HelloResponse response = HelloResponse.newBuilder()
+                .setGreeting(greeting)
+                .setAge(32)
+                .build();
         responseObserver.onNext(response);
         responseObserver.onCompleted();
     }
