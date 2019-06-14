@@ -2,9 +2,9 @@ package com.example.grpc.server.service;
 
 import com.example.grpc.server.message.HelloRequest;
 import com.example.grpc.server.message.HelloResponse;
+import com.example.grpc.server.service.HelloServiceGrpc.HelloServiceImplBase;
 import io.grpc.Status;
 import io.grpc.stub.StreamObserver;
-import com.example.grpc.server.service.HelloServiceGrpc.HelloServiceImplBase;
 import org.lognet.springboot.grpc.GRpcService;
 
 @GRpcService

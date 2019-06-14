@@ -1,5 +1,7 @@
 package com.example.grpc.server.service;
 
+import com.example.grpc.server.message.ClientStreamRequest;
+import com.example.grpc.server.message.ClientStreamResponse;
 import com.example.grpc.server.message.ServerStreamRequest;
 import com.example.grpc.server.message.ServerStreamResponse;
 import io.grpc.Status;
@@ -12,7 +14,7 @@ public class StreamServiceImpl extends StreamServiceGrpc.StreamServiceImplBase {
     public void serverStream(ServerStreamRequest request, StreamObserver<ServerStreamResponse> responseObserver) {
         int startIndex = request.getStart();
         try {
-            for (int i = 0; i < 100; i++) {
+            for (int i = 0; i < 10; i++) {
                 ServerStreamResponse response = ServerStreamResponse.newBuilder()
                         .setNext(i + startIndex)
                         .build();
@@ -23,5 +25,29 @@ public class StreamServiceImpl extends StreamServiceGrpc.StreamServiceImplBase {
         } catch (Exception ex) {
             responseObserver.onError(Status.INTERNAL.augmentDescription(ex.getMessage()).asRuntimeException());
         }
+    }
+
+    @Override
+    public StreamObserver<ClientStreamRequest> clientStream(StreamObserver<ClientStreamResponse> responseObserver) {
+        return new StreamObserver<ClientStreamRequest>() {
+            int count = 0;
+            @Override
+            public void onNext(ClientStreamRequest value) {
+                System.out.println(value.getNext());
+                count++;
+            }
+
+            @Override
+            public void onError(Throwable t) {
+                responseObserver.onError(Status.INTERNAL.augmentDescription(t.getMessage()).asRuntimeException());
+            }
+
+            @Override
+            public void onCompleted() {
+                ClientStreamResponse response = ClientStreamResponse.newBuilder().setCount(count).build();
+                responseObserver.onNext(response);
+                responseObserver.onCompleted();
+            }
+        };
     }
 }
