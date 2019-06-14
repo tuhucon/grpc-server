@@ -2,6 +2,7 @@ package com.example.grpc.server.service;
 
 import com.example.grpc.server.message.HelloRequest;
 import com.example.grpc.server.message.HelloResponse;
+import io.grpc.Status;
 import io.grpc.stub.StreamObserver;
 import com.example.grpc.server.service.HelloServiceGrpc.HelloServiceImplBase;
 import org.lognet.springboot.grpc.GRpcService;
@@ -22,6 +23,7 @@ public class HelloServiceImpl extends HelloServiceImplBase {
                 .setAge(32)
                 .build();
         responseObserver.onNext(response);
-        responseObserver.onCompleted();
+//        responseObserver.onCompleted();
+        responseObserver.onError(Status.INTERNAL.augmentDescription("Server error").asRuntimeException());
     }
 }
