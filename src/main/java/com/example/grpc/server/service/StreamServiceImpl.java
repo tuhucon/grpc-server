@@ -1,9 +1,6 @@
 package com.example.grpc.server.service;
 
-import com.example.grpc.server.message.ClientStreamRequest;
-import com.example.grpc.server.message.ClientStreamResponse;
-import com.example.grpc.server.message.ServerStreamRequest;
-import com.example.grpc.server.message.ServerStreamResponse;
+import com.example.grpc.server.message.*;
 import io.grpc.Status;
 import io.grpc.stub.StreamObserver;
 import org.lognet.springboot.grpc.GRpcService;
@@ -39,13 +36,43 @@ public class StreamServiceImpl extends StreamServiceGrpc.StreamServiceImplBase {
 
             @Override
             public void onError(Throwable t) {
-                responseObserver.onError(Status.INTERNAL.augmentDescription(t.getMessage()).asRuntimeException());
+                responseObserver.onError(Status.INTERNAL
+                                                        .withDescription("description here")
+                                                        // status description = with description + "/n" + augmentDescription
+                                                        .augmentDescription("detail: " + t.getMessage())
+                                                        .asRuntimeException());
             }
 
             @Override
             public void onCompleted() {
                 ClientStreamResponse response = ClientStreamResponse.newBuilder().setCount(count).build();
                 responseObserver.onNext(response);
+                responseObserver.onCompleted();
+            }
+        };
+    }
+
+    @Override
+    public StreamObserver<BidirectionStreamRequest> bidirectionStream(StreamObserver<BidirectionStreamResponse> responseObserver) {
+        return new StreamObserver<BidirectionStreamRequest>() {
+
+            @Override
+            public void onNext(BidirectionStreamRequest value) {
+                System.out.println(value.getMsg());
+                BidirectionStreamResponse response = BidirectionStreamResponse.newBuilder()
+                        .setMsg("server pong")
+                        .build();
+                responseObserver.onNext(response);
+            }
+
+            @Override
+            public void onError(Throwable t) {
+                System.out.println(t.getMessage());
+            }
+
+            @Override
+            public void onCompleted() {
+                System.out.println("client completed");
                 responseObserver.onCompleted();
             }
         };
