@@ -11,19 +11,23 @@ import org.lognet.springboot.grpc.GRpcService;
 public class HelloServiceImpl extends HelloServiceImplBase {
     @Override
     public void hello(HelloRequest helloRequest, StreamObserver<com.example.grpc.server.message.HelloResponse> responseObserver) {
-        String greeting = new StringBuilder()
-                .append("hello, ")
-                .append(helloRequest.getFirstName())
-                .append(" ")
-                .append(helloRequest.getLastName())
-                .toString();
-
-        HelloResponse response = HelloResponse.newBuilder()
-                .setGreeting(greeting)
-                .setAge(32)
-                .build();
-        responseObserver.onNext(response);
-//        responseObserver.onCompleted();
-        responseObserver.onError(Status.INTERNAL.augmentDescription("Server error").asRuntimeException());
+        try {
+            String greeting = new StringBuilder()
+                    .append("hello, ")
+                    .append(helloRequest.getFirstName())
+                    .append(" ")
+                    .append(helloRequest.getLastName())
+                    .toString();
+            Thread.sleep(61_000L);
+            HelloResponse response = HelloResponse.newBuilder()
+                    .setGreeting(greeting)
+                    .setAge(32)
+                    .build();
+            responseObserver.onNext(response);
+            responseObserver.onCompleted();
+            System.out.println("hello request is completed");
+        } catch (Exception ex) {
+            responseObserver.onError(Status.INTERNAL.augmentDescription("Server error").asRuntimeException());
+        }
     }
 }
