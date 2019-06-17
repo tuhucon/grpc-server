@@ -40,6 +40,7 @@ public class StreamServiceImpl extends StreamServiceGrpc.StreamServiceImplBase {
                                                         .withDescription("description here")
                                                         // status description = with description + "/n" + augmentDescription
                                                         .augmentDescription("detail: " + t.getMessage())
+                                                        .withCause(t)
                                                         .asRuntimeException());
             }
 
