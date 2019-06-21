@@ -4,7 +4,7 @@ import io.grpc.*;
 import lombok.extern.slf4j.Slf4j;
 import org.lognet.springboot.grpc.GRpcGlobalInterceptor;
 
-@GRpcGlobalInterceptor
+//@GRpcGlobalInterceptor
 @Slf4j
 public class LoggingInterceptor implements ServerInterceptor {
 

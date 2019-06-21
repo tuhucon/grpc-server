@@ -9,9 +9,9 @@ public class Application {
     public static void main(String[] args) {
         SpringApplication.run(Application.class, args);
         HelloRequest request = HelloRequest.newBuilder()
-                                            .setFirstName("Minh")
-                                            .setLastName("Tuan")
-                                            .build();
+                .setFirstName("Minh")
+                .setLastName("Tuan")
+                .build();
         System.out.println(request);
     }
 }

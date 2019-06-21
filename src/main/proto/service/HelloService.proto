@@ -1,7 +1,10 @@
 syntax = "proto3";
 import "message/hello/HelloMessage.proto";
+import "google/protobuf/empty.proto";
 package com.example.grpc.server.service;
 
 service HelloService {
-    rpc hello(com.example.grpc.server.message.HelloRequest) returns (com.example.grpc.server.message.HelloResponse);
+    rpc hello (com.example.grpc.server.message.HelloRequest) returns (com.example.grpc.server.message.HelloResponse);
+    rpc hellox (google.protobuf.Empty) returns (com.example.grpc.server.message.Person);
+    rpc helloy (com.example.grpc.server.message.Person) returns (com.example.grpc.server.message.Person);
 }

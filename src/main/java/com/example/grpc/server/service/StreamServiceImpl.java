@@ -28,6 +28,7 @@ public class StreamServiceImpl extends StreamServiceGrpc.StreamServiceImplBase {
     public StreamObserver<ClientStreamRequest> clientStream(StreamObserver<ClientStreamResponse> responseObserver) {
         return new StreamObserver<ClientStreamRequest>() {
             int count = 0;
+
             @Override
             public void onNext(ClientStreamRequest value) {
                 System.out.println(value.getNext());
@@ -37,15 +38,16 @@ public class StreamServiceImpl extends StreamServiceGrpc.StreamServiceImplBase {
             @Override
             public void onError(Throwable t) {
                 responseObserver.onError(Status.INTERNAL
-                                                        .withDescription("description here")
-                                                        // status description = with description + "/n" + augmentDescription
-                                                        .augmentDescription("detail: " + t.getMessage())
-                                                        .withCause(t)
-                                                        .asRuntimeException());
+                        .withDescription("description here")
+                        // status description = with description + "/n" + augmentDescription
+                        .augmentDescription("detail: " + t.getMessage())
+                        .withCause(t)
+                        .asRuntimeException());
             }
 
             @Override
             public void onCompleted() {
+                System.out.println("client stream complete");
                 ClientStreamResponse response = ClientStreamResponse.newBuilder().setCount(count).build();
                 responseObserver.onNext(response);
                 responseObserver.onCompleted();
